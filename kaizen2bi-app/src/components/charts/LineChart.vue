@@ -27,7 +27,7 @@
                       },
                       {
                         label: 'Gastos',
-                        backgroundColor: '#337dff',
+                        backgroundColor: '#fff',
                         data: [20, 10, 20, 19, 12, 45, 25, 79, 35, 25, 14, 7],
                       },
                   ],
