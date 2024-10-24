@@ -1,10 +1,6 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
-import { ref } from 'vue';
 
-const email = ref('');
-const password = ref('');
-const checked = ref(false);
 </script>
 
 <script>
@@ -13,7 +9,8 @@ export default {
   data() {
     return {
       loading: false,
-      message: ""
+      message: "",
+      userdata: {username:"", password:""}
     };
   },
   computed: {
@@ -23,16 +20,19 @@ export default {
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push("/profile");
+      this.$router.push("/");
     }
   },
   methods: {
-    handleLogin(user) {
-  //      console.log(user);
+   async handleLogin() {
+    //  const logindata = {username: email.value, password:password.value}
+     const data = {username: this.userdata.username, password: this.userdata.password}
+     var user;
+     console.log(data);
       this.loading = true;
-      this.$store.dispatch("auth/login", user).then(
+     await this.$store.dispatch("auth/login", this.userdata).then(
         () => {
-          this.$router.push("/");
+
         },
         (error) => {
           this.loading = false;
@@ -44,6 +44,21 @@ export default {
             error.toString();
         }
       );
+      this.$store.dispatch("userData/getLoggedUser").then(
+            () => {
+                user = JSON.parse(localStorage.getItem('user'));
+                if(user.role[0].code == 'Admin'){
+                    console.log(true)
+                    this.$router.push("/pages/crud")
+                }
+                 else if(user && user.role[0].code === "Cliente"){
+                  this.$router.push("/")
+                 }
+                 else this.$router.push("/landing");
+
+            });
+
+
     },
   },
 };
@@ -73,26 +88,26 @@ export default {
                                 />
                             </g>
                         </svg>
-                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to PrimeLand!</div>
-                        <span class="text-muted-color font-medium">Sign in to continue</span>
+                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">KAIZEN2B-Intelligence</div>
+                        <span class="text-muted-color font-medium">Accedé para continuar</span>
                     </div>
 
                     <div>
-                        <form action class="form" @submit.prevent="handleLogin">
-                        <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-                        <InputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" v-model="email" />
+                        <form @submit.prevent="handleLogin">
+                        <label for="email" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Correo electrónico</label>
+                        <InputText id="email" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" v-model="userdata.username" />
 
-                        <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
-                        <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+                        <label for="password" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Clave</label>
+                        <Password id="password" v-model="userdata.password" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
                         <div class="flex items-center justify-between mt-2 mb-8 gap-8">
                             <div class="flex items-center">
-                                <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>
-                                <label for="rememberme1">Remember me</label>
+                            <!--   <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>
+                                <label for="rememberme1">Remember me</label>-->
                             </div>
-                            <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
+                            <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">¿Olvidaste tú clave?</span>
                         </div>
-                        <Button label="Sign In" class="w-full" type="submit" @click="handleLogin"></Button>
+                        <Button label="Sign In" class="w-full" type="submit"></Button>
                     </form>
                     </div>
                 </div>

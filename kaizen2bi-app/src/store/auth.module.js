@@ -1,19 +1,19 @@
 import AuthService from "@/service/AuthService";
 
-const user = JSON.parse(localStorage.getItem('user'));
-const initialState = user
-  ? { status: { loggedIn: true }, user }
-  : { status: { loggedIn: false }, user: null };
+const token = JSON.parse(localStorage.getItem('token'));
+const initialState = token
+  ? { status: { loggedIn: true }, token }
+  : { status: { loggedIn: false }, token: null };
 
 export const auth = {
   namespaced: true,
   state: initialState,
   actions: {
-    login({ commit }, user) {
-      return AuthService.login(user).then(
-        user => {
-          commit('loginSuccess', user);
-          return Promise.resolve(user);
+    login({ commit }, token) {
+      return AuthService.login(token).then(
+        token => {
+          commit('loginSuccess', token);
+          return Promise.resolve(token);
         },
         error => {
           commit('loginFailure');
@@ -38,10 +38,11 @@ export const auth = {
       );
     }
   },
+
   mutations: {
-    loginSuccess(state, user) {
+    loginSuccess(state, token) {
       state.status.loggedIn = true;
-      state.user = user;
+      state.token = token;
     },
     loginFailure(state) {
       state.status.loggedIn = false;

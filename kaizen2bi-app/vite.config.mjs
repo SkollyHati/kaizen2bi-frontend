@@ -21,7 +21,26 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url))
         }
     },
-    devServer: {
-        proxy: 'http://localhost:3005'
-    }
+    server: {
+        proxy: {
+            "/api": {
+                target: "http://localhost:3005/",
+                changeOrigin: true,
+                secure: false,
+                rewrite: (p) => p.replace(/^\/api/, ""),
+            },
+        },
+        cors: false,
+    },
+    preview: {
+        proxy: {
+            "/api": {
+                target: "http://localhost:3005/",
+                changeOrigin: true,
+                secure: false,
+                rewrite: (p) => p.replace(/^\/api/, ""),
+            },
+        },
+        cors: false,
+    },
 });
