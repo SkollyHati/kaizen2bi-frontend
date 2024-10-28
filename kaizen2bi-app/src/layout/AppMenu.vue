@@ -11,7 +11,7 @@ const model = ref([
         ]
 
     },
-    {
+    {//esto es un comentario
         label: 'Admin',
         items: [
             { label: 'ABMC Clientes', icon: 'pi pi-fw pi-pencil', to: '/pages/clients', role:'admin' },
