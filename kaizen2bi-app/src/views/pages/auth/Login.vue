@@ -28,11 +28,11 @@ export default {
     //  const logindata = {username: email.value, password:password.value}
      const data = {username: this.userdata.username, password: this.userdata.password}
      var user;
-     console.log(data);
+     var succes;
       this.loading = true;
      await this.$store.dispatch("auth/login", this.userdata).then(
         () => {
-
+            succes=true;
         },
         (error) => {
           this.loading = false;
@@ -44,21 +44,20 @@ export default {
             error.toString();
         }
       );
-      this.$store.dispatch("userData/getLoggedUser").then(
+     if(succes) {
+        this.$store.dispatch("userData/getLoggedUser").then(
             () => {
                 user = JSON.parse(localStorage.getItem('user'));
-                if(user.role[0].code == 'Admin'){
-                    console.log(true)
-                    this.$router.push("/pages/crud")
+                if(user.role === 'ADM'){
+                    this.$router.push("/pages/Users")
                 }
-                 else if(user && user.role[0].code === "Cliente"){
-                  this.$router.push("/")
+                 else if(user.role  === "CLI"){
+                  this.$router.push("/dashboard")
                  }
                  else this.$router.push("/landing");
 
             });
-
-
+        }
     },
   },
 };

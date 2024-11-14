@@ -1,28 +1,39 @@
 <script setup>
-import { ref } from 'vue';
 
+import { ref } from 'vue';
 import AppMenuItem from './AppMenuItem.vue';
+
+const user = ref(JSON.parse(localStorage.getItem('user')));
 
 const model = ref([
     {
         label: 'Home',
         items: [
-            { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' , role:'client'},
-        ]
+            { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/dashboard' },
+        ],
+    },])
 
-    },
-    {//esto es un comentario
+const adminModel = ref([
+    {
         label: 'Admin',
         items: [
-            { label: 'ABMC Clientes', icon: 'pi pi-fw pi-pencil', to: '/pages/clients', role:'admin' },
-            { label: 'ABMC Usuarios', icon: 'pi pi-fw pi-pencil', to: '/pages/users', role:'admin' }
-        ],
+            { label: 'ABMC Clientes', icon: 'pi pi-fw pi-pencil', to: '/pages/clients' },
+            { label: 'ABMC Usuarios', icon: 'pi pi-fw pi-pencil', to: '/pages/users' }
+        ]
     }
 ]);
+
+
 </script>
 
 <template>
-    <ul class="layout-menu">
+    <ul v-if="user.role === 'ADM'"class="layout-menu">
+        <template v-for="(item, i) in adminModel" :key="item">
+            <app-menu-item v-if="!item.separator" :item="item" :index="i"> </app-menu-item>
+            <li v-if="item.separator" class="menu-separator"></li>
+        </template>
+    </ul>
+    <ul v-if="user.role === 'CLI'"class="layout-menu">
         <template v-for="(item, i) in model" :key="item">
             <app-menu-item v-if="!item.separator" :item="item" :index="i"> </app-menu-item>
             <li v-if="item.separator" class="menu-separator"></li>

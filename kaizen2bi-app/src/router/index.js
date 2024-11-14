@@ -9,17 +9,17 @@ const router = createRouter({
             component: AppLayout,
             children: [
                 {
-                    path: '/',
+                    path: '/dashboard',
                     name: 'dashboard',
                     component: () => import('@/views/Dashboard.vue')
                 },
                 {
-                    path: '/pages/clients',
+                    path: '/pages/Clients',
                     name: 'clients',
                     component: () => import('@/views/pages/Cruds/ClientsCrud.vue')
                 },
                 {
-                    path: '/pages/users',
+                    path: '/pages/Users',
                     name: 'users',
                     component: () => import('@/views/pages/Cruds/UsersCrud.vue')
                 },
@@ -54,7 +54,7 @@ const router = createRouter({
     ]
 });
 
-/*router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
     const publicPages = ['/auth/login', '/home'];
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('user');
@@ -63,6 +63,6 @@ const router = createRouter({
     } else {
       next();
     }
-  });*/
+  });
 
 export default router;
