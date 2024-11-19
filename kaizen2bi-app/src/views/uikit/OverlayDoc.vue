@@ -1,5 +1,5 @@
 <script setup>
-import { ProductService } from '@/service/ProductService';
+import { ClientService } from '@/service/ClientService';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
@@ -11,7 +11,7 @@ const visibleRight = ref(false);
 const visibleTop = ref(false);
 const visibleBottom = ref(false);
 const visibleFull = ref(false);
-const products = ref(null);
+const Clients = ref(null);
 const selectedProduct = ref(null);
 const op = ref(null);
 const op2 = ref(null);
@@ -21,7 +21,7 @@ const toast = useToast();
 const confirmPopup = useConfirm();
 
 onMounted(() => {
-    ProductService.getProductsSmall().then((data) => (products.value = data));
+    ClientService.getClientsSmall().then((data) => (Clients.value = data));
 });
 
 function open() {
@@ -44,7 +44,7 @@ function toggleDataTable(event) {
     op2.value.toggle(event);
 }
 
-function onProductSelect(event) {
+function onClientselect(event) {
     op.value.hide();
     toast.add({ severity: 'info', summary: 'Product Selected', detail: event.data.name, life: 3000 });
 }
@@ -94,7 +94,7 @@ function confirm(event) {
                 <div class="flex flex-wrap gap-2">
                     <Button type="button" label="Show" @click="toggleDataTable" />
                     <Popover ref="op2" id="overlay_panel" style="width: 450px">
-                        <DataTable v-model:selection="selectedProduct" :value="products" selectionMode="single" :paginator="true" :rows="5" @row-select="onProductSelect">
+                        <DataTable v-model:selection="selectedProduct" :value="Clients" selectionMode="single" :paginator="true" :rows="5" @row-select="onClientselect">
                             <Column field="name" header="Name" sortable style="min-width: 12rem"></Column>
                             <Column header="Image">
                                 <template #body="slotProps">

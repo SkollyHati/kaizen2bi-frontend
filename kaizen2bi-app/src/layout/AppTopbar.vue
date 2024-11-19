@@ -3,22 +3,33 @@ import { useLayout } from '@/layout/composables/layout';
 import { ref } from 'vue';
 import AppConfigurator from './AppConfigurator.vue';
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
+import AuthService from '@/service/AuthService';
+import router from '@/router';
 const user = ref(JSON.parse(localStorage.getItem('user')));
 const profileDialog = ref(false);
 const deleteprofileDialog = ref(false);
 const submitted = ref(false);
 
-
 function openProfile() {
-    user.value = {};
     submitted.value = false;
     profileDialog.value = true;
+}
+
+function openLogOut() {
+    submitted.value = false;
+    deleteprofileDialog.value = true;
 }
 
 function hideDialog() {
     profileDialog.value = false;
     submitted.value = false;
 }
+
+async function logOut() {
+    await AuthService.logout();
+    router.go();
+}
+
 </script>
 
 <template>
@@ -28,12 +39,12 @@ function hideDialog() {
                 <i class="pi pi-bars"></i>
             </button>
             <router-link to="/" class="layout-topbar-logo">
-                <svg viewBox="0 0 448 512" fill="none" xmlns="http://www.w3.org/2000/svg" >
-                            <path
-                                d="M448 80l0 48c0 44.2-100.3 80-224 80S0 172.2 0 128L0 80C0 35.8 100.3 0 224 0S448 35.8 448 80zM393.2 214.7c20.8-7.4 39.9-16.9 54.8-28.6L448 288c0 44.2-100.3 80-224 80S0 332.2 0 288L0 186.1c14.9 11.8 34 21.2 54.8 28.6C99.7 230.7 159.5 240 224 240s124.3-9.3 169.2-25.3zM0 346.1c14.9 11.8 34 21.2 54.8 28.6C99.7 390.7 159.5 400 224 400s124.3-9.3 169.2-25.3c20.8-7.4 39.9-16.9 54.8-28.6l0 85.9c0 44.2-100.3 80-224 80S0 476.2 0 432l0-85.9z"
-                                fill="var(--primary-color)"
-                            />
-                        </svg>
+                <svg viewBox="0 0 448 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M448 80l0 48c0 44.2-100.3 80-224 80S0 172.2 0 128L0 80C0 35.8 100.3 0 224 0S448 35.8 448 80zM393.2 214.7c20.8-7.4 39.9-16.9 54.8-28.6L448 288c0 44.2-100.3 80-224 80S0 332.2 0 288L0 186.1c14.9 11.8 34 21.2 54.8 28.6C99.7 230.7 159.5 240 224 240s124.3-9.3 169.2-25.3zM0 346.1c14.9 11.8 34 21.2 54.8 28.6C99.7 390.7 159.5 400 224 400s124.3-9.3 169.2-25.3c20.8-7.4 39.9-16.9 54.8-28.6l0 85.9c0 44.2-100.3 80-224 80S0 476.2 0 432l0-85.9z"
+                        fill="var(--primary-color)"
+                    />
+                </svg>
                 <span>KAIZEN2B-Intelligence</span>
             </router-link>
         </div>
@@ -64,17 +75,13 @@ function hideDialog() {
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-calendar"></i>
-                        <span>Calendar</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-inbox"></i>
-                        <span>Cerrar sesión</span>
-                    </button>
                     <button type="button" class="layout-topbar-action" @click="openProfile">
                         <i class="pi pi-user"></i>
-                        <span>Profile</span>
+                        <span>Perfil</span>
+                    </button>
+                    <button type="button" class="layout-topbar-action" @click="openLogOut">
+                        <i class="pi pi-fw pi-sign-out"></i>
+                        <span>Cerrar sesión</span>
                     </button>
                 </div>
             </div>
@@ -84,72 +91,46 @@ function hideDialog() {
             <div class="flex flex-col gap-6">
                 <img v-if="user.image" :src="`https://primefaces.org/cdn/primevue/images/user/${user.image}`" :alt="user.image" class="block m-auto pb-4" />
                 <div>
-                    <label for="name" class="block font-bold mb-3">Name</label>
-                    <InputText id="name" v-model.trim="user.username" required="true" autofocus :invalid="submitted && !user.name" fluid />
+                    <label for="name" class="block font-bold mb-3">Nombre de usuario</label>
+                    <InputText id="name" v-model.trim="user.username" required="true" autofocus :invalid="submitted && !user.username" fluid disabled="true" />
                     <small v-if="submitted && !user.name" class="text-red-500">Name is required.</small>
                 </div>
                 <div>
-                    <label for="description" class="block font-bold mb-3">Description</label>
-                    <Textarea id="description" v-model="user.description" required="true" rows="3" cols="20" fluid />
+                    <label for="email" class="block font-bold mb-3">Correo</label>
+                    <InputText id="email" v-model.trim="user.email" required="true" autofocus :invalid="submitted && !user.email" fluid disabled="true"/>
+                    <small v-if="submitted && !user.email" class="text-red-500">Name is required.</small>
                 </div>
                 <div>
-                    <label for="inventoryStatus" class="block font-bold mb-3">Inventory Status</label>
-                    <Select id="inventoryStatus" v-model="user.inventoryStatus" :options="statuses" optionLabel="label" placeholder="Select a Status" fluid></Select>
+                    <label for="firstname" class="block font-bold mb-3">Nombre</label>
+                    <InputText id="firstname" v-model.trim="user.firstname" required="true" autofocus :invalid="submitted && !user.firstname" fluid disabled="true" />
+                    <small v-if="submitted && !user.firstname" class="text-red-500">Name is required.</small>
                 </div>
-
                 <div>
-                    <span class="block font-bold mb-4">Category</span>
-                    <div class="grid grid-cols-12 gap-4">
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category1" v-model="user.category" name="category" value="Accessories" />
-                            <label for="category1">Accessories</label>
-                        </div>
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category2" v-model="user.category" name="category" value="Clothing" />
-                            <label for="category2">Clothing</label>
-                        </div>
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category3" v-model="user.category" name="category" value="Electronics" />
-                            <label for="category3">Electronics</label>
-                        </div>
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category4" v-model="user.category" name="category" value="Fitness" />
-                            <label for="category4">Fitness</label>
-                        </div>
-                    </div>
+                    <label for="lastname" class="block font-bold mb-3">Apellido</label>
+                    <InputText id="lastname" v-model.trim="user.lastname" required="true" autofocus :invalid="submitted && !user.lastname" fluid disabled="true" />
+                    <small v-if="submitted && !user.lastname" class="text-red-500">Name is required.</small>
                 </div>
-
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-6">
-                        <label for="price" class="block font-bold mb-3">Price</label>
-                        <InputNumber id="price" v-model="user.price" mode="currency" currency="USD" locale="en-US" fluid />
-                    </div>
-                    <div class="col-span-6">
-                        <label for="quantity" class="block font-bold mb-3">Quantity</label>
-                        <InputNumber id="quantity" v-model="user.quantity" integeronly fluid />
-                    </div>
+                <div>
+                    <label for="cuil" class="block font-bold mb-3">CUIL/CUIT</label>
+                    <InputText id="cuil" v-model.trim="user.cuil" required="true" autofocus :invalid="submitted && !user.cuil" fluid disabled="true" />
+                    <small v-if="submitted && !user.cuil" class="text-red-500">Name is required.</small>
                 </div>
             </div>
 
             <template #footer>
-                <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
-                <Button label="Save" icon="pi pi-check" @click="saveuser" />
+                <Button label="Cancelar" icon="pi pi-times" text @click="hideDialog" />
             </template>
         </Dialog>
 
         <Dialog v-model:visible="deleteprofileDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
             <div class="flex items-center gap-4">
                 <i class="pi pi-exclamation-triangle !text-3xl" />
-                <span v-if="user"
-                    >Are you sure you want to delete <b>{{ user.name }}</b
-                    >?</span
-                >
+                <span v-if="user"> ¿Estás seguro que deseas cerrar sesión? </span>
             </div>
             <template #footer>
                 <Button label="No" icon="pi pi-times" text @click="deleteprofileDialog = false" />
-                <Button label="Yes" icon="pi pi-check" @click="deleteuser" />
+                <Button label="Yes" icon="pi pi-check" @click="logOut" />
             </template>
         </Dialog>
-
     </div>
 </template>

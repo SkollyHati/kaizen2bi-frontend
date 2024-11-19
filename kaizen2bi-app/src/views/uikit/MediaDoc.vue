@@ -1,9 +1,9 @@
 <script setup>
 import { PhotoService } from '@/service/PhotoService';
-import { ProductService } from '@/service/ProductService';
+import { ClientService } from '@/service/ClientService';
 import { onMounted, ref } from 'vue';
 
-const products = ref([]);
+const Clients = ref([]);
 const images = ref([]);
 const galleriaResponsiveOptions = ref([
     {
@@ -42,7 +42,7 @@ const carouselResponsiveOptions = ref([
 ]);
 
 onMounted(() => {
-    ProductService.getProductsSmall().then((data) => (products.value = data));
+    ClientService.getClientsSmall().then((data) => (Clients.value = data));
     PhotoService.getImages().then((data) => (images.value = data));
 });
 
@@ -66,7 +66,7 @@ function getSeverity(status) {
 <template>
     <div class="card">
         <div class="font-semibold text-xl mb-4">Carousel</div>
-        <Carousel :value="products" :numVisible="3" :numScroll="3" :responsiveOptions="carouselResponsiveOptions">
+        <Carousel :value="Clients" :numVisible="3" :numScroll="3" :responsiveOptions="carouselResponsiveOptions">
             <template #item="slotProps">
                 <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
                     <div class="mb-4">

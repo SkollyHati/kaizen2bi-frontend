@@ -1,6 +1,6 @@
 <script setup>
 import { CustomerService } from '@/service/CustomerService';
-import { ProductService } from '@/service/ProductService';
+import { ClientService } from '@/service/ClientService';
 import { FilterMatchMode, FilterOperator } from '@primevue/core/api';
 import { onBeforeMount, reactive, ref } from 'vue';
 
@@ -10,7 +10,7 @@ const customers3 = ref(null);
 const filters1 = ref(null);
 const loading1 = ref(null);
 const balanceFrozen = ref(false);
-const products = ref(null);
+const Clients = ref(null);
 const expandedRows = ref([]);
 const statuses = reactive(['unqualified', 'qualified', 'new', 'negotiation', 'renewal', 'proposal']);
 const representatives = reactive([
@@ -81,7 +81,7 @@ function getStockSeverity(product) {
 }
 
 onBeforeMount(() => {
-    ProductService.getProductsWithOrdersSmall().then((data) => (products.value = data));
+    ClientService.getClientsWithOrdersSmall().then((data) => (Clients.value = data));
     CustomerService.getCustomersLarge().then((data) => {
         customers1.value = data;
         loading1.value = false;
@@ -108,7 +108,7 @@ function initFilters1() {
 }
 
 function expandAll() {
-    expandedRows.value = products.value.reduce((acc, p) => (acc[p.id] = true) && acc, {});
+    expandedRows.value = Clients.value.reduce((acc, p) => (acc[p.id] = true) && acc, {});
 }
 
 function collapseAll() {
@@ -289,7 +289,7 @@ function calculateCustomerTotal(name) {
 
     <div class="card">
         <div class="font-semibold text-xl mb-4">Row Expansion</div>
-        <DataTable v-model:expandedRows="expandedRows" :value="products" dataKey="id" tableStyle="min-width: 60rem">
+        <DataTable v-model:expandedRows="expandedRows" :value="Clients" dataKey="id" tableStyle="min-width: 60rem">
             <template #header>
                 <div class="flex flex-wrap justify-end gap-2">
                     <Button text icon="pi pi-plus" label="Expand All" @click="expandAll" />

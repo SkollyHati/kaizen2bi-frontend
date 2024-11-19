@@ -1,4 +1,4 @@
-import UsarDataService from "@/service/UsarDataService";
+import UserService from "@/service/UsersServices";
 
 const user = JSON.parse(localStorage.getItem('user'));
 const initialState = user
@@ -10,7 +10,7 @@ export const userData = {
   state: initialState,
   actions: {
     getLoggedUser({ commit }) {
-      return UsarDataService.getLoggedUser().then(
+      return UserService.getLoggedUser().then(
         user => {
           commit('dataSuccess', user);
           return Promise.resolve(user);

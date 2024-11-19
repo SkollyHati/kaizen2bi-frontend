@@ -1466,7 +1466,7 @@ export const CustomerService = {
                     name: 'Netherlands',
                     code: 'nl'
                 },
-                company: 'Saronix Nymph Products',
+                company: 'Saronix Nymph Clients',
                 date: '2018-07-09',
                 status: 'renewal',
                 verified: true,
@@ -5552,7 +5552,7 @@ export const CustomerService = {
                     name: 'Czech Republic',
                     code: 'cz'
                 },
-                company: 'Sidewinder Products Corp',
+                company: 'Sidewinder Clients Corp',
                 date: '2015-12-12',
                 status: 'renewal',
                 verified: true,
@@ -6164,7 +6164,7 @@ export const CustomerService = {
                     name: 'Argentina',
                     code: 'ar'
                 },
-                company: 'Goeman Wood Products Inc',
+                company: 'Goeman Wood Clients Inc',
                 date: '2019-01-02',
                 status: 'unqualified',
                 verified: true,
@@ -7118,7 +7118,7 @@ export const CustomerService = {
                     name: 'Colombia',
                     code: 'co'
                 },
-                company: 'Vico Products Mfg Co',
+                company: 'Vico Clients Mfg Co',
                 date: '2017-10-02',
                 status: 'negotiation',
                 verified: true,
@@ -7802,7 +7802,7 @@ export const CustomerService = {
                     name: 'Mexico',
                     code: 'mx'
                 },
-                company: 'Wheaton Plastic Products',
+                company: 'Wheaton Plastic Clients',
                 date: '2017-04-05',
                 status: 'negotiation',
                 verified: true,
